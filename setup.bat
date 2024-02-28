@@ -7,7 +7,7 @@ echo PORT=3000 >> .env
 :: Create or update other text files
 copy nul rate_limit.txt
 copy nul trace.json
-echo <Enter the client_ip> >> valid_ip.txt
+echo Enter the client_ip > valid_ip.txt
 
 :: Additional setup commands can be added as needed
 
