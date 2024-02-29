@@ -1,13 +1,13 @@
 
 # NetShield
 
-NetShield is a robust server-client interaction interface designed to enhance security through the implementation of a sophisticated firewall system. The primary objectives of this project are to allow only valid IP addresses and monitor request rates effectively. This system ensures a secure and controlled communication environment, preventing unauthorized access and mitigating potential threats.
+NetShield is an implementation of a sophisticated firewall system for a server-client interaction interface . The primary objectives of this project are to allow only valid IP addresses and monitor request rates effectively. This system ensures a secure and controlled communication environment, preventing unauthorized access and mitigating potential threats.It just simulates how a server handles the situation when it is flooded with multiple requests from a single source. For the scope of this project, I have considered only one client to contact the server at a time.  
 
 ## Features
 
-#### IP Whitelisting:
+#### Whitelisting and Blacklisting:
 
-NetShield employs an advanced IP whitelisting mechanism, allowing only specified IP addresses to connect to the server. This feature ensures that communication is restricted to trusted sources, enhancing overall network security.
+The firewall supports whitelisting and blacklisting of client IP addresses. Clients on the whitelist are granted access, while blacklisted clients are denied access. This feature ensures that communication is restricted to trusted sources, enhancing overall network security.
 
 #### Request Rate Limiting:
 
@@ -20,6 +20,9 @@ NetShield is highly customizable, allowing administrators to define and adjust s
 #### Trace File Logging:
 
 NetShield introduces a trace file feature that keeps a detailed log of all events taking place during server-client communication. This trace file includes information about incoming connections, firewall actions, and other relevant events. The trace file serves as a valuable resource for analyzing and diagnosing issues, as well as for auditing and security monitoring purposes.
+
+#### Blacklisting on Exceedance
+When a client exceeds the maximum request rate limit multiple times within a specified range, the server blacklists the client, preventing further access.
 ## Installation
 
 Clone the project
@@ -56,9 +59,10 @@ echo "SERVER_IP=\"<Enter the server_ip>\"" >> .env
 echo "PORT=3000" >> .env
 
 # Create or update other text files
-touch rate_limit.txt
+touch rate_limit.json
 touch trace.json
-echo "<Enter the client_ip>"  >> valid_ip.txt
+touch blacklist.txt
+echo "<Enter the client_ip>"  >> whitelist.txt
 
 # Additional setup commands can be added as needed
 
@@ -85,9 +89,10 @@ echo SERVER_IP="<Enter the server_ip>" > .env
 echo PORT=3000 >> .env
 
 :: Create or update other text files
-copy nul rate_limit.txt
+copy nul rate_limit.json
 copy nul trace.json
-echo Enter the client_ip > valid_ip.txt
+copy nul blacklist.txt
+echo Enter the client_ip > whitelist.txt
 
 :: Additional setup commands can be added as needed
 
@@ -116,6 +121,52 @@ Run the client.py script and you can also customize the flag values to alter the
 ```bash
   python client.py
 ```
+## Help
+```bash
+ _____ _____ _____ _____ _____ _____ 
+|   __|   __| __  |  |  |   __| __  |
+|__   |   __|    -|  |  |   __|    -|
+|_____|_____|__|__|\___/|_____|__|__|
+                                     
+usage: server.py <flags>
+
+Server 1.1
+
+options:
+  -h, --help            show this help message and exit
+  -r MAXREQ, --maxreq MAXREQ
+                        Maximum requests the firewall allows the client to send at a time.
+  -s SLEEPTIME, --sleeptime SLEEPTIME
+                        Waiting time, if the request rate exceeds.
+  -me MAXEXCEED, --maxexceed MAXEXCEED
+                        Maximum times the firewall allows a client to exceed the request rate
+                        limit.
+```
+```bash
+ _____ __    _____ _____ _____ _____ 
+|     |  |  |     |   __|   | |_   _|
+|   --|  |__|-   -|   __| | | | | |  
+|_____|_____|_____|_____|_|___| |_|  
+                                     
+usage: client.py <flags>
+
+Client 1.1
+
+options:
+  -h, --help            show this help message and exit
+  -n NUMBER, --number NUMBER
+                        Number of messages to be sent.
+  -m MESSAGE, --message MESSAGE
+                        Mulitiple messages to be sent separated by semicolon
+```
+## Example
+```bash
+python server.py -r 3 -s 20.0 -me 3
+```
+```bash
+python client.py -n 3 -m "Hello;How are you;Im good"
+```
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
