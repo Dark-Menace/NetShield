@@ -5,9 +5,10 @@ echo SERVER_IP="<Enter the server_ip>" > .env
 echo PORT=3000 >> .env
 
 :: Create or update other text files
-copy nul rate_limit.txt
+copy nul rate_limit.json
 copy nul trace.json
-echo Enter the client_ip > valid_ip.txt
+copy nul blacklist.txt
+echo Enter the client_ip > whitelist.txt
 
 :: Additional setup commands can be added as needed
 

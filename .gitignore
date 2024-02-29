@@ -1,5 +1,6 @@
 .env
-rate_limit.txt
+rate_limit.json
 trace.json
-valid_ip.txt
+whitelist.txt
+blacklist.txt
 /.venv

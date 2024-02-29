@@ -5,9 +5,10 @@ echo "SERVER_IP=\"<Enter the server_ip>\"" >> .env
 echo "PORT=3000" >> .env
 
 # Create or update other text files
-touch rate_limit.txt
+touch rate_limit.json
 touch trace.json
-echo "<Enter the client_ip>"  >> valid_ip.txt
+touch blacklist.txt
+echo "<Enter the client_ip>"  >> whitelist.txt
 
 # Additional setup commands can be added as needed
 
