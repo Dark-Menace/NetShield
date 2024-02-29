@@ -1,3 +1,5 @@
+"""Script to be executed on a server system"""
+
 import socket
 from dotenv import dotenv_values
 from firewall import Firewall
@@ -6,8 +8,9 @@ import datetime
 import argparse
 import pyfiglet
 out=pyfiglet.figlet_format("SERVER",font="rectangles") 
+
 class Server:
-    def __init__(self,max_req,sleep_time,maxexceed):
+    def __init__(self,max_req,sleep_time,maxexceed):#initialisation constructor to get values from .env 
         config=dotenv_values(".env")
         self.server_ip=config["SERVER_IP"]
         self.port=int(config["PORT"])
@@ -18,11 +21,11 @@ class Server:
         self.sleep_time=sleep_time
         self.event=""
 
-    def limit_reset(self):
+    def limit_reset(self):#updating the request count with each req sent by the client
             self.req_count=1
             self.firewall_object.request_limit_updation(self.client_ip,self.req_count,self.limit_exceed_count)
     
-    def assess_validity(self,white,black):
+    def assess_validity(self,white,black): #checks whether the server is being contacted by an unknown IP or a black-listed IP
         if black:
             self.event=f"Firewall Alert : Request from black-listed IP: {self.client_ip}"
             self.firewall_object.trace_comm_info(self.client_ip,self.server_ip,self.event,datetime.datetime.now())
@@ -43,7 +46,7 @@ class Server:
             self.firewall_object.trace_comm_info(self.server_ip,self.client_ip,self.event,datetime.datetime.now())
             return False
         return True
-    def run_req_room(self):
+    def run_req_room(self): # main interaction function
         self.server=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         self.server.bind((self.server_ip,self.port))
         self.server.listen(1)
@@ -69,7 +72,7 @@ class Server:
 
                     read_request_limit_exceeded=self.firewall_object.read_request_limit(self.client_ip)>self.max_req
 
-                    if read_request_limit_exceeded and self.firewall_object.read_exceed_count(self.client_ip)+1>self.maxexceed:
+                    if read_request_limit_exceeded and self.firewall_object.read_exceed_count(self.client_ip)+1>self.maxexceed: # code block to black-list an IP when  the IP exceeds its maximum allowed request Rate limit Exceedance
                         self.client_socket.send(f"Request Rate limit Exceeded!!! IP:{self.client_ip} has been black-listed by the firewall!".encode("utf-8"))
                         self.event=f"Firewall black_listed an IP"
                         self.firewall_object.trace_comm_info(self.server_ip,self.client_ip,self.event,datetime.datetime.now())
@@ -77,7 +80,7 @@ class Server:
                         print(f"{self.server_ip}@server > Request Rate limit Exceeded!!! IP:{self.client_ip} has been black-listed by the firewall!")                        
                         self.limit_exceed_count+=1
                         break
-                    if read_request_limit_exceeded:
+                    if read_request_limit_exceeded: # code block when request rate limit has been exceeded by the IP
                         self.client_socket.send(f"Request Rate limit Exceeded!!! Wait for {self.sleep_time} seconds".encode("utf-8"))
                         self.event=f"Request Rate limit Exceeded"
                         self.firewall_object.trace_comm_info(self.server_ip,self.client_ip,self.event,datetime.datetime.now())
@@ -87,7 +90,7 @@ class Server:
                         self.limit_reset()
                         continue
 
-                    request=request.decode("utf-8")
+                    request=request.decode("utf-8") #  acknowledging the request sent by the client 
                     self.client_socket.send("Acknowledged.".encode("utf-8"))
                     self.event=f"Message sent by server"
                     self.firewall_object.trace_comm_info(self.server_ip,self.client_ip,self.event,datetime.datetime.now())
@@ -106,7 +109,7 @@ class Server:
                 print("Error while establishing connection with client.")
             
 
-
+#config arguments while executing on the terminal
 parser =argparse.ArgumentParser(description="Server 1.1",usage="server.py <flags>")
 parser._print_message(out)
 parser.add_argument("-r","--maxreq",type=int,default=10,help="Maximum requests the firewall allows the client to send at a time.")
