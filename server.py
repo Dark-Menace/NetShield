@@ -69,7 +69,7 @@ class Server:
 
                     read_request_limit_exceeded=self.firewall_object.read_request_limit(self.client_ip)>self.max_req
 
-                    if read_request_limit_exceeded and self.firewall_object.read_exceed_count(self.client_ip)>self.maxexceed:
+                    if read_request_limit_exceeded and self.firewall_object.read_exceed_count(self.client_ip)+1>self.maxexceed:
                         self.client_socket.send(f"Request Rate limit Exceeded!!! IP:{self.client_ip} has been black-listed by the firewall!".encode("utf-8"))
                         self.event=f"Firewall black_listed an IP"
                         self.firewall_object.trace_comm_info(self.server_ip,self.client_ip,self.event,datetime.datetime.now())
