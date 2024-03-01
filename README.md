@@ -28,7 +28,7 @@ When a client exceeds the maximum request rate limit multiple times within a spe
 Clone the project
 
 ```bash
-  https://github.com/Dark-Menace/NetShield.git
+  git clone https://github.com/Dark-Menace/NetShield.git
 ```
 
 Go to the project directory
