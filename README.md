@@ -50,7 +50,7 @@ Install dependencies
 
 #### LINUX
 
-Add the server IPv4 address in the .env file and the client IPv4 address in the valid_ip.txt for whitelisting it.
+Add the server IPv4 address in the .env file and the client IPv4 address in the whitelist.txt for whitelisting it.
 ```bash
 #!/bin/bash
 
@@ -80,7 +80,7 @@ Execute the bash script:
 
 #### WINDOWS
 
-Add the server IPv4 address in the .env file and the client IPv4 address in the valid_ip.txt for whitelisting it.
+Add the server IPv4 address in the .env file and the client IPv4 address in the whitelist.txt for whitelisting it.
 ```batch
 @echo off
 
